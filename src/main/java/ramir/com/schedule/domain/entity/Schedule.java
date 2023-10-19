@@ -8,7 +8,6 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "schedule")
 public class Schedule {
 
     @Id
@@ -19,6 +18,6 @@ public class Schedule {
     private LocalDateTime creationDate;
 
     @ManyToOne
-    private Person person;
+    private User user;
 
 }
