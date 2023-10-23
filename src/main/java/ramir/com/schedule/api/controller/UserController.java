@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ramir.com.schedule.domain.entity.User;
+import ramir.com.schedule.domain.entity.UserDto;
 import ramir.com.schedule.domain.service.UserService;
 
 import java.util.List;
@@ -19,8 +20,11 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> save(@RequestBody User user) {
-        User savedUser = userService.saveUser(user);
+    public ResponseEntity<Object> save(@RequestBody User user) {
+        Optional<User> savedUser = userService.saveUser(user);
+        if(savedUser.isEmpty())
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already registered.");
+
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
@@ -31,13 +35,13 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable(value = "id") UUID id,
-                                             @RequestBody User user) {
-        Optional<User> userOptional = userService.updateUser(user, id);
-        if (userOptional.isPresent()) {
-            var userUpdated = userOptional.get();
-            userService.saveUser(userUpdated);
-            return ResponseEntity.status(HttpStatus.OK).body(userUpdated);
+    public ResponseEntity<Object> updateUser(
+            @PathVariable(value = "id") UUID id,
+            @RequestBody User user)
+    {
+        var updatedUser = userService.updateUser(user, id);
+        if (updatedUser != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
     }

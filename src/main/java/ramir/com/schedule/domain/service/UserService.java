@@ -1,13 +1,15 @@
 package ramir.com.schedule.domain.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ramir.com.schedule.domain.entity.User;
-import ramir.com.schedule.exception.BusinessException;
+import ramir.com.schedule.domain.entity.UserDto;
 import ramir.com.schedule.domain.repository.UserRepository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,16 +20,19 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
-    public User saveUser(User user) {
+    public Optional<User> saveUser(User user) {
+        if(!isRegisteredEmail(user.getEmail())){
+            return Optional.of(userRepository.save(user));
+        }
+    return Optional.empty();
+    }
 
-        //TODO: Duplicated emails sould not be saved
-
-//        Optional<User> userFounded = userRepository.findByEmail(user.getEmail());
-//        if(userFounded.isPresent()){
-//            throw new BusinessException("Email already registered.");
-//        }
-        return userRepository.save(user);
+    private boolean isRegisteredEmail(String email){
+        var emailFound = userRepository.findByEmail(email);
+        return emailFound.isPresent();
     }
 
     public List<User> getUsers() {
@@ -38,13 +43,17 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public Optional<User> updateUser(User user, UUID id){
+    public UserDto updateUser(User user, UUID id) {
         Optional<User> userFound = userRepository.findById(id);
-        if(userFound.isPresent()){
-            BeanUtils.copyProperties(user, userFound);
+        if (userFound.isPresent()) {
+            userFound.get().setName(user.getName());
+            userFound.get().setLastname(user.getLastname());
+            userFound.get().setPhone(user.getPhone());
+            userFound.get().setEmail(user.getEmail());
+
             userRepository.save(userFound.get());
         }
-        return userFound;
+        return modelMapper.map(userFound, UserDto.class);
     }
 
     public void delete(UUID id) {
