@@ -7,6 +7,7 @@ public class UserDto {
 
     private String name;
     private String lastname;
+    private String email;
     private String phone;
 
 }

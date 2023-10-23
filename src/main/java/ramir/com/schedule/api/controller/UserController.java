@@ -1,6 +1,7 @@
 package ramir.com.schedule.api.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,15 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userList);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> findUser(@PathVariable(name = "id") UUID id){
+        Optional<UserDto> user = userService.getUser(id);
+        if(user.isPresent())
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+
+        return ResponseEntity.notFound().build();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateUser(
             @PathVariable(value = "id") UUID id,
@@ -43,7 +53,16 @@ public class UserController {
         if (updatedUser != null) {
             return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteUser(@PathVariable(name = "id") UUID id){
+        Optional<UserDto> deletedUser = userService.delete(id);
+        if (deletedUser.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(deletedUser.get());
     }
 
 }

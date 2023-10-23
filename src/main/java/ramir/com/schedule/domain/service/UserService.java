@@ -9,7 +9,6 @@ import ramir.com.schedule.domain.entity.User;
 import ramir.com.schedule.domain.entity.UserDto;
 import ramir.com.schedule.domain.repository.UserRepository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,8 +38,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUser(UUID id) {
-        return userRepository.findById(id);
+    public Optional<UserDto> getUser(UUID id) {
+        var userFound = userRepository.findById(id);
+        return Optional.ofNullable(modelMapper.map(userFound, UserDto.class));
     }
 
     public UserDto updateUser(User user, UUID id) {
@@ -56,8 +56,12 @@ public class UserService {
         return modelMapper.map(userFound, UserDto.class);
     }
 
-    public void delete(UUID id) {
-        userRepository.deleteById(id);
+    public Optional<UserDto> delete(UUID id) {
+        var userFound = userRepository.findById(id);
+        if (userFound.isPresent()){
+            userRepository.deleteById(id);
+            return Optional.ofNullable(modelMapper.map(userFound, UserDto.class));
+        }
+        return Optional.empty();
     }
-
 }
