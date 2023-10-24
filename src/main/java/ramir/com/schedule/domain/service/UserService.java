@@ -5,14 +5,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ramir.com.schedule.api.dto.UserDto;
 import ramir.com.schedule.domain.entity.User;
-import ramir.com.schedule.domain.entity.UserDto;
 import ramir.com.schedule.domain.repository.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,18 +36,16 @@ public class UserService {
     }
 
     public List<UserDto> getUsers() {
-        List<User> userList = userRepository.findAll();
-        List<UserDto> dtoList = new ArrayList<UserDto>();
+        var users = userRepository.findAll();
 
-        userList.forEach(user -> {
-            dtoList.add(convertToUserDTO(user));
-        });
-        return dtoList;
+        return users.stream()
+                .map(this::convertToUserDTO)
+                .collect(Collectors.toList());
     }
 
     public Optional<UserDto> getUser(UUID id) {
         var userFound = userRepository.findById(id);
-        return Optional.ofNullable(convertToUserDTO(userFound.get()));
+        return userFound.map(this::convertToUserDTO);
     }
 
     public UserDto updateUser(User userReceived, UUID id) {
@@ -63,7 +61,7 @@ public class UserService {
         return convertToUserDTO(userFound.get());
     }
 
-    public Optional<UserDto> delete(UUID id) {
+    public Optional<UserDto> deleteUser(UUID id) {
         var userFound = userRepository.findById(id);
         if (userFound.isPresent()) {
             userRepository.deleteById(id);
