@@ -1,4 +1,4 @@
-package ramir.com.schedule.domain.entity;
+package ramir.com.schedule.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
