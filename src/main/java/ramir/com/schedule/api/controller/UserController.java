@@ -1,7 +1,6 @@
 package ramir.com.schedule.api.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +29,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> findAllUsers() {
-        List<User> userList = userService.getUsers();
+    public ResponseEntity<List<UserDto>> findAllUsers() {
+        List<UserDto> userList = userService.getUsers();
         return ResponseEntity.status(HttpStatus.OK).body(userList);
     }
 
@@ -64,5 +63,7 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(deletedUser.get());
     }
+
+    // TODO: Create UserResponse class and UserRequest class
 
 }
