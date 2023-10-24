@@ -36,22 +36,23 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> findUser(@PathVariable(name = "id") UUID id) {
-        Optional<UserDto> user = userService.getUser(id);
-        if (user.isPresent())
-            return ResponseEntity.status(HttpStatus.OK).body(user.get());
+    public ResponseEntity<User> findUser(@PathVariable(name = "id") UUID id) {
+        Optional<User> user = userService.getUser(id);
+        if (user.isEmpty())
+            return ResponseEntity.notFound().build();
 
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.OK).body(user.get());
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUser(
             @PathVariable(value = "id") UUID id,
-            @RequestBody User user) {
+            @RequestBody User user
+    ) {
         var response = userService.updateUser(user, id);
-        if (response.isPresent()) {
+        if (response.isPresent())
             return ResponseEntity.status(HttpStatus.OK).body(response.get());
-        }
+
         return ResponseEntity.notFound().build();
     }
 

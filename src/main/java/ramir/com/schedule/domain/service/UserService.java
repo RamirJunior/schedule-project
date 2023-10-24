@@ -43,9 +43,8 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<UserDto> getUser(UUID id) {
-        var userFound = userRepository.findById(id);
-        return userFound.map(this::convertToUserDTO);
+    public Optional<User> getUser(UUID id) {
+         return userRepository.findById(id);
     }
 
     public Optional<UserDto> updateUser(User userReceived, UUID id) {

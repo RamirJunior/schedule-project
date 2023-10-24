@@ -15,7 +15,7 @@ public class Schedule {
     private UUID id;
     private String description;
     private LocalDateTime dateTime;
-    private LocalDateTime creationDate;
+    private LocalDateTime creationDateTime;
 
     @ManyToOne
     private User user;
