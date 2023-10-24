@@ -48,7 +48,7 @@ public class UserService {
         return userFound.map(this::convertToUserDTO);
     }
 
-    public UserDto updateUser(User userReceived, UUID id) {
+    public Optional<UserDto> updateUser(User userReceived, UUID id) {
         Optional<User> userFound = userRepository.findById(id);
         if (userFound.isPresent()) {
             userFound.get().setName(userReceived.getName());
@@ -58,7 +58,7 @@ public class UserService {
 
             userRepository.save(userFound.get());
         }
-        return convertToUserDTO(userFound.get());
+        return Optional.ofNullable(convertToUserDTO(userFound.get()));
     }
 
     public Optional<UserDto> deleteUser(UUID id) {

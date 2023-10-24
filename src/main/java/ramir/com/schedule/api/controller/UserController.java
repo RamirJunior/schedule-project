@@ -1,5 +1,6 @@
 package ramir.com.schedule.api.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody User user) {
+    public ResponseEntity<Object> save(@Valid @RequestBody User user) {
         Optional<User> savedUser = userService.saveUser(user);
         if (savedUser.isEmpty())
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already registered.");
@@ -35,21 +36,21 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findUser(@PathVariable(name = "id") UUID id) {
+    public ResponseEntity<UserDto> findUser(@PathVariable(name = "id") UUID id) {
         Optional<UserDto> user = userService.getUser(id);
         if (user.isPresent())
-            return ResponseEntity.status(HttpStatus.OK).body(user);
+            return ResponseEntity.status(HttpStatus.OK).body(user.get());
 
         return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateUser(
+    public ResponseEntity<UserDto> updateUser(
             @PathVariable(value = "id") UUID id,
             @RequestBody User user) {
-        var updatedUser = userService.updateUser(user, id);
-        if (updatedUser != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+        var response = userService.updateUser(user, id);
+        if (response.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(response.get());
         }
         return ResponseEntity.notFound().build();
     }
