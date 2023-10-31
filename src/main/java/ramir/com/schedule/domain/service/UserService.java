@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ramir.com.schedule.api.dto.UserDto;
+import ramir.com.schedule.api.dto.UserResponse;
 import ramir.com.schedule.domain.entity.User;
 import ramir.com.schedule.domain.repository.UserRepository;
 
@@ -35,7 +35,7 @@ public class UserService {
         return emailFound.isPresent();
     }
 
-    public List<UserDto> getUsers() {
+    public List<UserResponse> getUsers() {
         var users = userRepository.findAll();
 
         return users.stream()
@@ -47,7 +47,7 @@ public class UserService {
          return userRepository.findById(id);
     }
 
-    public Optional<UserDto> updateUser(User userReceived, UUID id) {
+    public Optional<UserResponse> updateUser(User userReceived, UUID id) {
         Optional<User> userFound = userRepository.findById(id);
         if (userFound.isPresent()) {
             userFound.get().setName(userReceived.getName());
@@ -60,7 +60,7 @@ public class UserService {
         return Optional.ofNullable(convertToUserDTO(userFound.get()));
     }
 
-    public Optional<UserDto> deleteUser(UUID id) {
+    public Optional<UserResponse> deleteUser(UUID id) {
         var userFound = userRepository.findById(id);
         if (userFound.isPresent()) {
             userRepository.deleteById(id);
@@ -71,7 +71,7 @@ public class UserService {
         return Optional.empty();
     }
 
-    private UserDto convertToUserDTO(User user) {
-        return modelMapper.map(user, UserDto.class);
+    private UserResponse convertToUserDTO(User user) {
+        return modelMapper.map(user, UserResponse.class);
     }
 }

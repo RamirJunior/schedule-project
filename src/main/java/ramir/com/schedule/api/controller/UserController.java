@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ramir.com.schedule.api.dto.UserDto;
+import ramir.com.schedule.api.dto.UserResponse;
 import ramir.com.schedule.domain.entity.User;
 import ramir.com.schedule.domain.service.UserService;
 
@@ -30,8 +30,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> findAllUsers() {
-        List<UserDto> userList = userService.getUsers();
+    public ResponseEntity<List<UserResponse>> findAllUsers() {
+        List<UserResponse> userList = userService.getUsers();
         return ResponseEntity.status(HttpStatus.OK).body(userList);
     }
 
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(
+    public ResponseEntity<UserResponse> updateUser(
             @PathVariable(value = "id") UUID id,
             @RequestBody User user
     ) {
@@ -58,7 +58,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable(name = "id") UUID id) {
-        Optional<UserDto> deletedUser = userService.deleteUser(id);
+        Optional<UserResponse> deletedUser = userService.deleteUser(id);
         if (deletedUser.isEmpty())
             return ResponseEntity.notFound().build();
 
