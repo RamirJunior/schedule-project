@@ -1,18 +1,14 @@
 package ramir.com.schedule.domain.service;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ramir.com.schedule.api.dto.UserResponse;
 import ramir.com.schedule.domain.entity.User;
 import ramir.com.schedule.domain.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -20,14 +16,12 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    @Autowired
-    private ModelMapper modelMapper;
 
     public Optional<User> saveUser(User user) {
-        if (!isRegisteredEmail(user.getEmail()))
-            return Optional.of(userRepository.save(user));
+        if (isRegisteredEmail(user.getEmail()))
+            return Optional.empty();
 
-        return Optional.empty();
+        return Optional.of(userRepository.save(user));
     }
 
     private boolean isRegisteredEmail(String email) {
@@ -35,43 +29,37 @@ public class UserService {
         return emailFound.isPresent();
     }
 
-    public List<UserResponse> getUsers() {
-        var users = userRepository.findAll();
-
-        return users.stream()
-                .map(this::convertToUserDTO)
-                .collect(Collectors.toList());
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
     public Optional<User> getUser(UUID id) {
-         return userRepository.findById(id);
+        return userRepository.findById(id);
     }
 
-    public Optional<UserResponse> updateUser(User userReceived, UUID id) {
+    public Optional<User> updateUser(User userReceived, UUID id) {
         Optional<User> userFound = userRepository.findById(id);
-        if (userFound.isPresent()) {
-            userFound.get().setName(userReceived.getName());
-            userFound.get().setLastname(userReceived.getLastname());
-            userFound.get().setPhone(userReceived.getPhone());
-            userFound.get().setEmail(userReceived.getEmail());
+        if (userFound.isEmpty())
+            return userFound;
 
-            userRepository.save(userFound.get());
-        }
-        return Optional.ofNullable(convertToUserDTO(userFound.get()));
+        copyAttributes(userReceived, userFound.get());
+        var userUpdated = userRepository.save(userFound.get());
+        return Optional.of(userUpdated);
     }
 
-    public Optional<UserResponse> deleteUser(UUID id) {
-        var userFound = userRepository.findById(id);
-        if (userFound.isPresent()) {
-            userRepository.deleteById(id);
-            return Optional.ofNullable(
-                    convertToUserDTO(userFound.get())
-            );
-        }
-        return Optional.empty();
+    private static void copyAttributes(User userSource, User userDestination) {
+        userDestination.setName(userSource.getName());
+        userDestination.setLastname(userSource.getLastname());
+        userDestination.setPhone(userSource.getPhone());
+        userDestination.setEmail(userSource.getEmail());
     }
 
-    private UserResponse convertToUserDTO(User user) {
-        return modelMapper.map(user, UserResponse.class);
+    public Optional<User> deleteUser(UUID id) {
+        Optional<User> userFound = userRepository.findById(id);
+        if (userFound.isEmpty())
+            return Optional.empty();
+
+        userRepository.deleteById(id);
+        return userFound;
     }
 }

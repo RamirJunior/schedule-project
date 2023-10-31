@@ -17,14 +17,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    @NotBlank(message = "Name is required.")
     private String name;
-
-    @NotBlank(message = "Lastname is required.")
     private String lastname;
-
-    @NotBlank(message = "Email is required.")
     @Email
     private String email;
     private String phone;

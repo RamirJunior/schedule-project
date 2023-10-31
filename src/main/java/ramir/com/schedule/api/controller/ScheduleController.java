@@ -25,16 +25,16 @@ public class ScheduleController {
 
     @PostMapping
     public ResponseEntity<ScheduleResponse> save(@Valid @RequestBody ScheduleRequest scheduleRequest){
-        Schedule schedule = mapper.toSchedule(scheduleRequest);
-        Schedule savedSchedule = scheduleService.saveSchedule(schedule);
-        ScheduleResponse scheduleResponse = mapper.toScheduleResponse(savedSchedule);
+        var schedule = mapper.toSchedule(scheduleRequest);
+        var savedSchedule = scheduleService.saveSchedule(schedule);
+        var scheduleResponse = mapper.toScheduleResponse(savedSchedule);
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleResponse);
     }
 
     @GetMapping
     public ResponseEntity<List<ScheduleResponse>> findAllSchedules(){
         var scheduleList = scheduleService.getSchedules();
-        List<ScheduleResponse> scheduleResponseList = mapper.toScheduleResponseList(scheduleList);
+        var scheduleResponseList = mapper.toScheduleResponseList(scheduleList);
         return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseList);
     }
 
@@ -44,7 +44,7 @@ public class ScheduleController {
         if (scheduleFound.isEmpty())
             return ResponseEntity.notFound().build();
 
-        ScheduleResponse scheduleResponse = mapper.toScheduleResponse(scheduleFound.get());
+        var scheduleResponse = mapper.toScheduleResponse(scheduleFound.get());
         return ResponseEntity.status(HttpStatus.OK).body(scheduleResponse);
     }
 }
