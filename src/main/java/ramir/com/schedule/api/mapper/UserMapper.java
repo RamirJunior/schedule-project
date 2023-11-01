@@ -21,11 +21,11 @@ public class UserMapper {
         return mapper.map(request, User.class);
     }
 
-    public UserResponse toUserResponse (User user) {
+    public UserResponse toUserResponse(User user) {
         return mapper.map(user, UserResponse.class);
     }
 
-    public List<UserResponse> toUserResponseList (List<User> users) {
+    public List<UserResponse> toUserResponseList(List<User> users) {
         return users.stream()
                 .map(this::toUserResponse)
                 .collect(Collectors.toList());

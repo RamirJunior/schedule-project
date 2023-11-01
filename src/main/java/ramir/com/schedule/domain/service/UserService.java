@@ -42,16 +42,20 @@ public class UserService {
         if (userFound.isEmpty())
             return userFound;
 
-        copyAttributes(userReceived, userFound.get());
+        copyValidAttributes(userReceived, userFound.get());
         var userUpdated = userRepository.save(userFound.get());
         return Optional.of(userUpdated);
     }
 
-    private static void copyAttributes(User userSource, User userDestination) {
-        userDestination.setName(userSource.getName());
-        userDestination.setLastname(userSource.getLastname());
-        userDestination.setPhone(userSource.getPhone());
-        userDestination.setEmail(userSource.getEmail());
+    private static void copyValidAttributes(User userSource, User userDestination) {
+        if (userSource.getName() != null)
+            userDestination.setName(userSource.getName());
+        if (userSource.getLastname() != null)
+            userDestination.setLastname(userSource.getLastname());
+        if (userSource.getEmail() != null)
+            userDestination.setEmail(userSource.getEmail());
+        if (userSource.getPhone() != null)
+            userDestination.setPhone(userSource.getPhone());
     }
 
     public Optional<User> deleteUser(UUID id) {
