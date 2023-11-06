@@ -10,10 +10,10 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ScheduleResponse {
+public class ScheduleResponseDto {
 
     private UUID id;
     private String description;
     private LocalDateTime dateTime;
-    private UserResponse user;
+    private UserResponseDto user;
 }

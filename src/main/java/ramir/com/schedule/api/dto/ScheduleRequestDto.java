@@ -14,7 +14,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ScheduleRequest {
+public class ScheduleRequestDto {
 
     @NotBlank
     private String description;

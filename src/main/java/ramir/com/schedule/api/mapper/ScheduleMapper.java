@@ -3,8 +3,8 @@ package ramir.com.schedule.api.mapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import ramir.com.schedule.api.dto.ScheduleRequest;
-import ramir.com.schedule.api.dto.ScheduleResponse;
+import ramir.com.schedule.api.dto.ScheduleRequestDto;
+import ramir.com.schedule.api.dto.ScheduleResponseDto;
 import ramir.com.schedule.domain.entity.Schedule;
 
 import java.util.List;
@@ -16,15 +16,15 @@ public class ScheduleMapper {
 
     private final ModelMapper mapper;
 
-    public Schedule toSchedule(ScheduleRequest request) {
+    public Schedule toSchedule(ScheduleRequestDto request) {
         return mapper.map(request, Schedule.class);
     }
 
-    public ScheduleResponse toScheduleResponse(Schedule schedule) {
-        return mapper.map(schedule, ScheduleResponse.class);
+    public ScheduleResponseDto toScheduleResponse(Schedule schedule) {
+        return mapper.map(schedule, ScheduleResponseDto.class);
     }
 
-    public List<ScheduleResponse> toScheduleResponseList(List<Schedule> schedules) {
+    public List<ScheduleResponseDto> toScheduleResponseList(List<Schedule> schedules) {
         return schedules.stream()
                 .map(this::toScheduleResponse)
                 .collect(Collectors.toList());

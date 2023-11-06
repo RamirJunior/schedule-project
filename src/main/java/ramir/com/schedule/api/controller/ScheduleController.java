@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ramir.com.schedule.api.dto.ScheduleRequest;
-import ramir.com.schedule.api.dto.ScheduleResponse;
+import ramir.com.schedule.api.dto.ScheduleRequestDto;
+import ramir.com.schedule.api.dto.ScheduleResponseDto;
 import ramir.com.schedule.api.mapper.ScheduleMapper;
 import ramir.com.schedule.domain.entity.Schedule;
 import ramir.com.schedule.domain.service.ScheduleService;
@@ -24,7 +24,7 @@ public class ScheduleController {
     private final ScheduleMapper mapper;
 
     @PostMapping
-    public ResponseEntity<ScheduleResponse> save(@Valid @RequestBody ScheduleRequest scheduleRequest){
+    public ResponseEntity<ScheduleResponseDto> save(@Valid @RequestBody ScheduleRequestDto scheduleRequest){
         var schedule = mapper.toSchedule(scheduleRequest);
         var savedSchedule = scheduleService.saveSchedule(schedule);
         var scheduleResponse = mapper.toScheduleResponse(savedSchedule);
@@ -32,14 +32,14 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ScheduleResponse>> findAllSchedules(){
+    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(){
         var scheduleList = scheduleService.getSchedules();
         var scheduleResponseList = mapper.toScheduleResponseList(scheduleList);
         return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ScheduleResponse> findSchedule(UUID id){
+    public ResponseEntity<ScheduleResponseDto> findSchedule(UUID id){
         Optional<Schedule> scheduleFound = scheduleService.getSchedule(id);
         if (scheduleFound.isEmpty())
             return ResponseEntity.notFound().build();

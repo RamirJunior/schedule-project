@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ramir.com.schedule.api.dto.UserRequest;
-import ramir.com.schedule.api.dto.UserResponse;
+import ramir.com.schedule.api.dto.UserRequestDto;
+import ramir.com.schedule.api.dto.UserResponseDto;
 import ramir.com.schedule.api.mapper.UserMapper;
 import ramir.com.schedule.domain.entity.User;
 import ramir.com.schedule.domain.service.UserService;
@@ -24,7 +24,7 @@ public class UserController {
     private final UserMapper mapper;
 
     @PostMapping
-    public ResponseEntity<UserResponse> save(@Valid @RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponseDto> save(@Valid @RequestBody UserRequestDto userRequest) {
         User user = mapper.toUser(userRequest);
         Optional<User> savedUser = userService.saveUser(user);
         if (savedUser.isEmpty())
@@ -35,14 +35,14 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponse>> findAllUsers() {
+    public ResponseEntity<List<UserResponseDto>> findAllUsers() {
         var userList = userService.getUsers();
         var userResponseList = mapper.toUserResponseList(userList);
         return ResponseEntity.status(HttpStatus.OK).body(userResponseList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> findUser(@PathVariable(name = "id") UUID id) {
+    public ResponseEntity<UserResponseDto> findUser(@PathVariable(name = "id") UUID id) {
         Optional<User> user = userService.getUser(id);
         if (user.isEmpty())
             return ResponseEntity.notFound().build();
@@ -52,9 +52,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(
+    public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable(value = "id") UUID id,
-            @RequestBody UserRequest userRequest
+            @RequestBody UserRequestDto userRequest
     ) {
         User user = mapper.toUser(userRequest);
         Optional<User> userUpdated = userService.updateUser(user, id);
@@ -66,7 +66,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<UserResponse> deleteUser(@PathVariable(name = "id") UUID id) {
+    public ResponseEntity<UserResponseDto> deleteUser(@PathVariable(name = "id") UUID id) {
         Optional<User> deletedUser = userService.deleteUser(id);
         if (deletedUser.isEmpty())
             return ResponseEntity.notFound().build();
