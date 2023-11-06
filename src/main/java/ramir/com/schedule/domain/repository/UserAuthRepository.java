@@ -2,10 +2,12 @@ package ramir.com.schedule.domain.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
-import ramir.com.schedule.domain.entity.UserLogin;
+import org.springframework.stereotype.Repository;
+import ramir.com.schedule.domain.entity.UserAuth;
 
 import java.util.UUID;
 
-public interface LoginRepository extends JpaRepository<UserLogin, UUID> {
+@Repository
+public interface UserAuthRepository extends JpaRepository<UserAuth, UUID> {
     UserDetails findByLogin(String login);
 }
