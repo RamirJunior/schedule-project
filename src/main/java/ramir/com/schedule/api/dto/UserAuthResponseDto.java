@@ -1,13 +1,11 @@
 package ramir.com.schedule.api.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 import ramir.com.schedule.domain.entity.UserRole;
 
+@Data
 public class UserAuthResponseDto {
-    @NotBlank
     private String login;
-    @NotBlank
     private String password;
-    @NotBlank
     private UserRole role;
 }

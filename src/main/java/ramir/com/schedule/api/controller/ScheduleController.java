@@ -21,20 +21,20 @@ import java.util.UUID;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
-    private final ScheduleMapper mapper;
+    private final ScheduleMapper scheduleMapper;
 
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> save(@Valid @RequestBody ScheduleRequestDto scheduleRequest){
-        var schedule = mapper.toSchedule(scheduleRequest);
+        var schedule = scheduleMapper.toSchedule(scheduleRequest);
         var savedSchedule = scheduleService.saveSchedule(schedule);
-        var scheduleResponse = mapper.toScheduleResponse(savedSchedule);
+        var scheduleResponse = scheduleMapper.toScheduleResponse(savedSchedule);
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleResponse);
     }
 
     @GetMapping
     public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(){
         var scheduleList = scheduleService.getSchedules();
-        var scheduleResponseList = mapper.toScheduleResponseList(scheduleList);
+        var scheduleResponseList = scheduleMapper.toScheduleResponseList(scheduleList);
         return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseList);
     }
 
@@ -44,7 +44,7 @@ public class ScheduleController {
         if (scheduleFound.isEmpty())
             return ResponseEntity.notFound().build();
 
-        var scheduleResponse = mapper.toScheduleResponse(scheduleFound.get());
+        var scheduleResponse = scheduleMapper.toScheduleResponse(scheduleFound.get());
         return ResponseEntity.status(HttpStatus.OK).body(scheduleResponse);
     }
 }

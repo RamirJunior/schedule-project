@@ -13,11 +13,8 @@ import ramir.com.schedule.domain.entity.UserAuth;
 public class UserAuthMapper {
 
     private final ModelMapper mapper;
-    private final BCryptPasswordEncoder encrypter;
 
     public UserAuth toUserAuth(UserAuthRequestDto userAuthRequestDto) {
-        userAuthRequestDto.setPassword(
-                encrypter.encode(userAuthRequestDto.getPassword()));
         return mapper.map(userAuthRequestDto, UserAuth.class);
     }
 

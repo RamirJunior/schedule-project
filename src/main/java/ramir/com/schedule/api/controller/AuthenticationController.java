@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ramir.com.schedule.api.dto.LoginRequestDto;
 import ramir.com.schedule.api.dto.UserAuthRequestDto;
 import ramir.com.schedule.api.dto.UserAuthResponseDto;
 import ramir.com.schedule.api.mapper.UserAuthMapper;
 import ramir.com.schedule.domain.entity.UserAuth;
 import ramir.com.schedule.domain.repository.UserAuthRepository;
+import ramir.com.schedule.domain.service.EncryptionService;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,11 +25,12 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final UserAuthRepository userAuthRepository;
+    private final EncryptionService encryptionService;
     private final UserAuthMapper userAuthMapper;
 
     @PostMapping("/login")
-    public ResponseEntity login(@Valid @RequestBody UserAuthRequestDto requestAuth) {
-        var loginData = new UsernamePasswordAuthenticationToken(requestAuth.getLogin(), requestAuth.getPassword());
+    public ResponseEntity login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+        var loginData = new UsernamePasswordAuthenticationToken(loginRequestDto.getLogin(), loginRequestDto.getPassword());
         var auth = authenticationManager.authenticate(loginData);
 
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -39,7 +42,9 @@ public class AuthenticationController {
         if (userFound != null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-        UserAuth userAuth = userAuthMapper.toUserAuth(userAuthRequestDto);
+        userAuthRequestDto.setPassword(
+                encryptionService.hashPassword(userAuthRequestDto.getPassword()));
+        var userAuth = userAuthMapper.toUserAuth(userAuthRequestDto);
         var savedUserAuth = userAuthRepository.save(userAuth);
         var userAuthResponseDto = userAuthMapper.userAuthResponseDto(savedUserAuth);
         return ResponseEntity.status(HttpStatus.CREATED).body(userAuthResponseDto);
