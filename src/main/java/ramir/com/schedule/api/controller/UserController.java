@@ -21,23 +21,23 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-    private final UserMapper mapper;
+    private final UserMapper userMapper;
 
     @PostMapping
     public ResponseEntity<UserResponseDto> save(@Valid @RequestBody UserRequestDto userRequest) {
-        User user = mapper.toUser(userRequest);
+        User user = userMapper.toUser(userRequest);
         Optional<User> savedUser = userService.saveUser(user);
         if (savedUser.isEmpty())
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
-        var userResponse = mapper.toUserResponse(savedUser.get());
+        var userResponse = userMapper.toUserResponse(savedUser.get());
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> findAllUsers() {
         var userList = userService.getUsers();
-        var userResponseList = mapper.toUserResponseList(userList);
+        var userResponseList = userMapper.toUserResponseList(userList);
         return ResponseEntity.status(HttpStatus.OK).body(userResponseList);
     }
 
@@ -47,7 +47,7 @@ public class UserController {
         if (user.isEmpty())
             return ResponseEntity.notFound().build();
 
-        var userResponse = mapper.toUserResponse(user.get());
+        var userResponse = userMapper.toUserResponse(user.get());
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
@@ -56,12 +56,12 @@ public class UserController {
             @PathVariable(value = "id") UUID id,
             @RequestBody UserRequestDto userRequest
     ) {
-        User user = mapper.toUser(userRequest);
+        User user = userMapper.toUser(userRequest);
         Optional<User> userUpdated = userService.updateUser(user, id);
         if (userUpdated.isEmpty())
             return ResponseEntity.notFound().build();
 
-        var userResponse = mapper.toUserResponse(userUpdated.get());
+        var userResponse = userMapper.toUserResponse(userUpdated.get());
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
@@ -71,7 +71,7 @@ public class UserController {
         if (deletedUser.isEmpty())
             return ResponseEntity.notFound().build();
 
-        var userResponse = mapper.toUserResponse(deletedUser.get());
+        var userResponse = userMapper.toUserResponse(deletedUser.get());
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 }
