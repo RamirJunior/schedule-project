@@ -1,4 +1,4 @@
-package ramir.com.schedule.api.dto;
+package ramir.com.schedule.api.dto.schedule;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;

@@ -1,4 +1,4 @@
-package ramir.com.schedule.api.dto;
+package ramir.com.schedule.api.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

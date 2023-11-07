@@ -1,4 +1,4 @@
-package ramir.com.schedule.domain.service;
+package ramir.com.schedule.domain.service.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

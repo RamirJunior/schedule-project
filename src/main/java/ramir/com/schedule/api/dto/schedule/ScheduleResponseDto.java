@@ -1,8 +1,9 @@
-package ramir.com.schedule.api.dto;
+package ramir.com.schedule.api.dto.schedule;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ramir.com.schedule.api.dto.user.UserResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

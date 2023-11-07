@@ -1,4 +1,4 @@
-package ramir.com.schedule.api.dto;
+package ramir.com.schedule.api.dto.auth;
 
 import lombok.Data;
 import ramir.com.schedule.domain.entity.UserRole;

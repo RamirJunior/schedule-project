@@ -1,4 +1,4 @@
-package ramir.com.schedule.domain.service;
+package ramir.com.schedule.domain.service.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -3,8 +3,8 @@ package ramir.com.schedule.api.mapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import ramir.com.schedule.api.dto.ScheduleRequestDto;
-import ramir.com.schedule.api.dto.ScheduleResponseDto;
+import ramir.com.schedule.api.dto.schedule.ScheduleRequestDto;
+import ramir.com.schedule.api.dto.schedule.ScheduleResponseDto;
 import ramir.com.schedule.domain.entity.Schedule;
 
 import java.util.List;

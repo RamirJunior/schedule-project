@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ramir.com.schedule.api.dto.LoginRequestDto;
-import ramir.com.schedule.api.dto.UserAuthRequestDto;
-import ramir.com.schedule.api.dto.UserAuthResponseDto;
+import ramir.com.schedule.api.dto.login.LoginResponseDto;
+import ramir.com.schedule.api.dto.login.LoginRequestDto;
+import ramir.com.schedule.api.dto.auth.UserAuthRequestDto;
+import ramir.com.schedule.api.dto.auth.UserAuthResponseDto;
 import ramir.com.schedule.api.mapper.UserAuthMapper;
 import ramir.com.schedule.domain.entity.UserAuth;
 import ramir.com.schedule.domain.repository.UserAuthRepository;
-import ramir.com.schedule.domain.service.EncryptionService;
+import ramir.com.schedule.domain.service.security.EncryptionService;
+import ramir.com.schedule.domain.service.security.TokenService;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,13 +29,17 @@ public class AuthenticationController {
     private final UserAuthRepository userAuthRepository;
     private final EncryptionService encryptionService;
     private final UserAuthMapper userAuthMapper;
+    private final TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
-        var loginData = new UsernamePasswordAuthenticationToken(loginRequestDto.getLogin(), loginRequestDto.getPassword());
+    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+        var loginData = new UsernamePasswordAuthenticationToken(
+                loginRequestDto.getLogin(), loginRequestDto.getPassword());
         var auth = authenticationManager.authenticate(loginData);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        var token = tokenService.generateToken((UserAuth) auth.getPrincipal());
+        var loginResponseDto = new LoginResponseDto(token);
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponseDto);
     }
 
     @PostMapping("/register")
@@ -44,9 +50,10 @@ public class AuthenticationController {
 
         userAuthRequestDto.setPassword(
                 encryptionService.hashPassword(userAuthRequestDto.getPassword()));
+
         var userAuth = userAuthMapper.toUserAuth(userAuthRequestDto);
         var savedUserAuth = userAuthRepository.save(userAuth);
-        var userAuthResponseDto = userAuthMapper.userAuthResponseDto(savedUserAuth);
+        var userAuthResponseDto = userAuthMapper.toUserAuthResponseDto(savedUserAuth);
         return ResponseEntity.status(HttpStatus.CREATED).body(userAuthResponseDto);
     }
 }
