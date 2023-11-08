@@ -1,17 +1,17 @@
 <h1 align="center">
-  <p>SCHEDULE API <br>
-  Java | Spring Boot | PostgreSQL</p>
+  <p>SCHEDULE API REST<br>
+  Java | Spring Security | PostgreSQL</p>
 </h1>
+
 
 
 <p align="center">
   <a href="#about-wave">About</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#how-to-use-rocket">How to use</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#resourcesstar">Resources</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#resourcespick">Resources</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#techscomputer">Techs</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#documentationbook">Documentation</a>&nbsp;&nbsp;&nbsp;
 </p>
-
 
 
 
@@ -39,15 +39,65 @@ I used the information below for access:
 * Senha: `123`
 
 
-## Resources:star:
+## Resources:pick:
 
 Schedule API works with the following tables:
 
- - `Users`
+ - `Login` - User Auth _(username, password, role...)_
+ - `Users` - Content user data _(name, lastname, email...)_
+ - `Schedule` - Content schedule data _(userId, description, createdAt...)_
 
- - `Schedule`
+#### Regarding `Login`, you can access the following routes:
 
-   
+* _WARNING :  There are 2 roles for auth login; `ADMIN` and `USER`. For use `POST`or `DELETE` HTTP methods, is required have an account/login with `ADMIN` role registered on database.  For any other HTTP methods, the `USER` role is available for._
+
+ - `POST /auth/register`
+
+ > Registrate a new user credentials with `login`, `password` and `role` provided in the request body, then checks if the `login` field already exists in the table.
+
+```bash
+// URL Example:
+
+POST localhost:8080/auth/register
+```
+
+<details>
+  <summary>Response Example</summary>
+
+
+
+```json
+{
+  "login": "ramirjunior",
+  "password": "$2a$10$4/JSwYWuKEOTXWISqAmH6e1XYDIrz3Y5.W0xyiksIQu3svtzMHtVS",
+  "role": "ADMIN"
+}
+```
+
+</details>
+
+ - `POST /auth/login`
+
+ > Execute the login previosly registered on application. The `login` and `password` must to be provided in the request body. Returns a bearer token in authentication successful case.
+
+```BASH
+// URL Example:
+
+POST localhost:8080/auth/login
+```
+
+<details>
+  <summary>Response Example</summary>
+
+
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzY2hlZHVsZS1hcGkiLCJzdWIiOiJndWVzdCIsImV4cCI6MTY5OTQyNTg1OX0.UFnt5fQKeJWXg_l8-6uyNtrF3gkay2z34GpLzwAHXzk"
+}
+```
+
+</details>
 
 #### Regarding `Users`, you can access the following routes:
 
@@ -55,16 +105,16 @@ Schedule API works with the following tables:
  > Creates a new user with the data provided in the request body and checks if the user's email already exists in the database.
 
 ```BASH
-// Example for access to route POST /user
+// URL Example:
 
-localhost:8080/user
+POST localhost:8080/user
 ```
 
 <details>
   <summary>Response Example</summary>
 
 
-```javascript
+```json
 {
   "id": "3a056937-d969-45f3-9e9d-1bb3b8be7146",
   "name": "Ramir",
@@ -79,16 +129,16 @@ localhost:8080/user
  > Lists all registered users in the database.
 
 ```BASH
-// Example for access route GET /user
+// URL Example:
 
-localhost:8080/user
+GET localhost:8080/user
 ```
 
 <details>
   <summary>Response Example</summary>
 
 
-```javascript
+```json
 [
     {
         "id": "3a056937-d969-45f3-9e9d-1bb3b8be7146",
@@ -110,16 +160,16 @@ localhost:8080/user
  > Returns the user found corresponding to the `id` provided in the URI.
 
 ```BASH
-// Example for access route GET /user/{id}
+// URL Example:
 
-localhost:8080/user/02f1b7e8-7ac7-4c4b-ac92-e940dca5477e
+GET localhost:8080/user/02f1b7e8-7ac7-4c4b-ac92-e940dca5477e
 ```
 
 <details>
   <summary>Response Example</summary>
 
 
-```javascript
+```json
 {
     "id": "02f1b7e8-7ac7-4c4b-ac92-e940dca5477e",
     "name": "Mariana",
@@ -134,21 +184,16 @@ localhost:8080/user/02f1b7e8-7ac7-4c4b-ac92-e940dca5477e
  > Updates the user corresponding to the id according to the information provided in the request `body`.
 
 ```BASH
-// Example for access route PUT /user/{id}
+// URL Example:
 
-localhost:8080/user/02f1b7e8-7ac7-4c4b-ac92-e940dca5477e
-
-//BODY
-{
-    "name":"Mari"
-}
+PUT localhost:8080/user/02f1b7e8-7ac7-4c4b-ac92-e940dca5477e
 ```
 
 <details>
   <summary>Response Example</summary>
 
 
-```javascript
+```json
 {
     "id": "02f1b7e8-7ac7-4c4b-ac92-e940dca5477e",
     "name": "Mari",
@@ -163,16 +208,16 @@ localhost:8080/user/02f1b7e8-7ac7-4c4b-ac92-e940dca5477e
  > Deletes the user record corresponding to the provided `id`.
 
 ```BASH
-// Exemplo de acesso para a rota DELETE /user/{id}
+// URL Example:
 
-localhost:8080/user/02f1b7e8-7ac7-4c4b-ac92-e940dca5477e
+DELETE localhost:8080/user/02f1b7e8-7ac7-4c4b-ac92-e940dca5477e
 ```
 
 <details>
   <summary>Response Example</summary>
 
 
-```javascript
+```json
 {
     "id": "02f1b7e8-7ac7-4c4b-ac92-e940dca5477e",
     "name": "Mariana",
@@ -185,26 +230,19 @@ localhost:8080/user/02f1b7e8-7ac7-4c4b-ac92-e940dca5477e
 #### Regarding Schedule, you can access the following routes:
 
  - `POST /schedule`
- > Schedules a new appointment with the data provided in the request body, validates if the user exists in the database according to `userId`, and also validates if the desired date is a future or current date.
+ > Schedules a new appointment with the `description, dateTime` and `userId`provided in the request body, validates if the user exists in the database according to `userId`, and also validates if the desired date is a future or current date.
 
 ```BASH
-// Example for access route POST /schedule
+// URL Example:
 
-localhost:8080/schedule
-
-// BODY
-{
-    "description":"Estudar Custom Validations",
-    "dateTime":"2023-12-13T09:00:02",
-    "userId":"3a056937-d969-45f3-9e9d-1bb3b8be7146"
-}
+POST localhost:8080/schedule
 ```
 
 <details>
   <summary>Response Example</summary>
 
 
-```javascript
+```json
 {
   "id": "583a02ff-9541-4484-a6f6-f395cbc5e90d",
     "description": "Estudar Custom Validations",
@@ -223,16 +261,16 @@ localhost:8080/schedule
  > Returns a list of all appointments registered in the database.
 
 ```BASH
-// Example for access route GET /schedules
+// URL Example:
 
-localhost:8080/user
+GET localhost:8080/user
 ```
 
 <details>
   <summary>Response Example</summary>
 
 
-```javascript
+```json
 [
     {
         "id": "583a02ff-9541-4484-a6f6-f395cbc5e90d",
