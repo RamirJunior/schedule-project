@@ -8,9 +8,10 @@
   <a href="#about-wave">About</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#how-to-use-rocket">How to use</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#resourcesstar">Resources</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#techsman_technologist">Techs</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#techscomputer">Techs</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#documentationbook">Documentation</a>&nbsp;&nbsp;&nbsp;
 </p>
+
 
 
 
@@ -261,16 +262,18 @@ localhost:8080/user
 
 
 
-## Techs:man_technologist:
+## Techs :computer:
 
 Key technologies used in the project:
 
 * [Spring Initializr](https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.1.4&packaging=jar&jvmVersion=17&groupId=br.com.andrehorman&artifactId=todolist&name=todolist&description=Gerenciador%20de%20tarefas&packageName=br.com.andrehorman.todolist&dependencies=web,devtools,lombok,data-jpa,h2)
 * [Spring Web](https://docs.spring.io/spring-boot/docs/3.1.4/reference/htmlsingle/index.html#web)
+* [Spring Data JPA](https://github.com/spring-projects/spring-data-jpa)
+* [Spring Security](https://docs.spring.io/spring-security/reference/index.html)
+* [Java-Jwt](https://github.com/auth0/java-jwt)
 * [Project Lombok](https://projectlombok.org/)
-* [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
 * [Flyway](https://documentation.red-gate.com/fd)
-* [Model Mapper][https://modelmapper.org/getting-started/]
+* [Model Mapper](https://modelmapper.org/getting-started/)
 
 
 ## Documentation:book:
